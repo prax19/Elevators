@@ -5,11 +5,9 @@ import simulation.SimulationEntity;
 import utilities.AgentLocation;
 import utilities.Direction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
-public class Floor implements SimulationEntity, AgentLocation {
+public class Floor implements SimulationEntity, AgentLocation, Comparable<Floor> {
 
     private final int level;
     private List<Agent> agents;
@@ -88,9 +86,9 @@ public class Floor implements SimulationEntity, AgentLocation {
         if(floors.isEmpty())
             throw new IllegalArgumentException("No floors found");
         for(Floor floor : floors) {
-            if(floor.getLevel() == currentFloor.getLevel() + 1 && direction == Direction.UP)
+            if(direction == Direction.UP && floor.getLevel() == currentFloor.getLevel() + 1)
                 return floor;
-            if(floor.getLevel() == currentFloor.getLevel() - 1 && direction == Direction.DOWN)
+            if(direction == Direction.DOWN && floor.getLevel() == currentFloor.getLevel() - 1)
                 return floor;
         }
         throw new NoSuchElementException("No such floor found");
@@ -99,8 +97,8 @@ public class Floor implements SimulationEntity, AgentLocation {
     public static Direction determineDirection(List<Floor> floors, Floor initialFloor, Floor targetFloor) {
         if(floors.isEmpty())
             throw new IllegalArgumentException("No floors found");
-        if(initialFloor.getLevel() == targetFloor.getLevel())
-            throw new IllegalArgumentException("Both floors are the same");
+//        if(initialFloor.getLevel() == targetFloor.getLevel())
+//            throw new IllegalArgumentException("Both floors are the same");
         if(initialFloor.getLevel() < targetFloor.getLevel())
             return Direction.UP;
         else
@@ -124,8 +122,31 @@ public class Floor implements SimulationEntity, AgentLocation {
         return nearestFloor;
     }
 
+    public static List<Floor> getFloorsSortedByDistance(List<Floor> floors, Floor floor) {
+        if (floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+
+        Collections.sort(floors, Comparator.comparingInt(f -> Math.abs(f.getLevel() - floor.getLevel())));
+
+        return floors;
+
+    }
+
     public static boolean isGreaterOrEquals(Floor floor1, Floor floor2) {
         return floor1.getLevel() >= floor2.getLevel();
     }
 
+    public static boolean isGettingFarther(Floor floor, Floor objectFloor, Direction direction) {
+        if(direction == Direction.UP && objectFloor.getLevel() > floor.getLevel())
+            return true;
+        if(direction == Direction.DOWN && objectFloor.getLevel() < floor.getLevel())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public int compareTo(Floor o) {
+        return this.level - o.getLevel();
+    }
 }

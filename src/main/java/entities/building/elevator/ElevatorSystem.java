@@ -29,8 +29,9 @@ public class ElevatorSystem implements SimulationEntity {
     // Calls idle or on-the-way elevator.
     // Equivalent of calling elevator from an up/down control panel on each floor.
     public void callElevator(Floor floor, Direction direction) {
-        Elevator elevator = elevators.get(0);
-            elevator.addToQueue(floor, direction);
+        Elevator elevator = selectElevator(floor, direction);
+        elevator.addToQueue(floor, direction);
+
     }
 
     // Send specific elevator to specific floor.
@@ -39,13 +40,32 @@ public class ElevatorSystem implements SimulationEntity {
         elevator.addToQueue(floor, elevator.getDirection());
     }
 
+    public Elevator selectElevator(Floor targetFloor, Direction direction) {
+
+        Elevator selectedElevator = null;
+        int minDistance = Integer.MAX_VALUE;
+        for(Elevator elevator : elevators) {
+            if(!Floor.isGettingFarther(targetFloor, elevator.getFloor(), elevator.getDirection())) {
+                int distance = Math.abs(elevator.getFloor().getLevel() - targetFloor.getLevel());
+                if(distance < minDistance) {
+                    minDistance = distance;
+                    selectedElevator = elevator;
+                }
+            }
+        }
+        return selectedElevator;
+
+    }
+
     public List<Elevator> getElevators() {
         return elevators;
     }
 
     @Override
     public void update() {
-        for(Elevator elevator : elevators)
+        for(Elevator elevator : elevators) {
             elevator.update();
+        }
+
     }
 }
