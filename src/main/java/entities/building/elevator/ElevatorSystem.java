@@ -1,15 +1,28 @@
 package entities.building.elevator;
 
 import entities.Agent;
+import entities.building.Building;
 import entities.building.Floor;
 import simulation.SimulationEntity;
 import utilities.Direction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElevatorSystem implements SimulationEntity {
 
-    private List<Elevator> elevators;
+    private final Building context;
+
+    private final List<Elevator> elevators;
+
+    public ElevatorSystem(Building context, int numberOfElevators) {
+        this.context = context;
+        elevators = new ArrayList();
+        for(int i = 0; i < numberOfElevators; i++)
+            elevators.add(
+                    new Elevator(Floor.getGroundFloor(context.getFloors()))
+            );
+    }
 
     // Calls idle or on-the-way elevator.
     // Equivalent of calling elevator from an up/down control panel on each floor.

@@ -8,16 +8,27 @@ import java.util.List;
 
 public class Building implements SimulationEntity {
 
-    private List<Floor> floors;
-    private ElevatorSystem elevatorSystem;
+    private final List<Floor> floors;
+    private final ElevatorSystem elevatorSystem;
 
     private List<Agent> agents;
 
+    public Building(int minLevel, int maxLevel, int numberOfElevators) {
+        floors = Floor.getFloorsInRange(minLevel, maxLevel);
+        elevatorSystem = new ElevatorSystem(this, numberOfElevators);
+    }
+
     @Override
     public void update() {
+        elevatorSystem.update();
         for(Floor floor : floors)
             floor.update();
         for(Agent agent : agents)
             agent.update();
     }
+
+    public List<Floor> getFloors() {
+        return floors;
+    }
+
 }
