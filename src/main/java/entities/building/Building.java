@@ -4,6 +4,7 @@ import entities.Agent;
 import entities.building.elevator.ElevatorSystem;
 import simulation.SimulationEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Building implements SimulationEntity {
@@ -16,6 +17,7 @@ public class Building implements SimulationEntity {
     public Building(int minLevel, int maxLevel, int numberOfElevators) {
         floors = Floor.getFloorsInRange(minLevel, maxLevel);
         elevatorSystem = new ElevatorSystem(this, numberOfElevators);
+        agents = new ArrayList<>();
     }
 
     @Override

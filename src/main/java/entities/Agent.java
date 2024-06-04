@@ -16,10 +16,13 @@ public class Agent implements SimulationEntity {
         this.context = context;
         this.currentLocation = currentLocation;
         this.targetFloor = targetFloor;
+        currentLocation.onEnter(this);
     }
 
     @Override
     public void update() {
+        if(currentLocation instanceof Floor) {
 
+        }
     }
 }
