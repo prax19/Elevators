@@ -26,6 +26,11 @@ public class Agent implements SimulationEntity {
         currentLocation.onEnter(this);
     }
 
+    public void remove() {
+        currentLocation.onExit(this);
+
+    }
+
     public Floor getTargetFloor() {
         return targetFloor;
     }

@@ -34,8 +34,9 @@ public class SimulationRunner {
         printInfo("1 - create a building");
         if(building != null) {
             printInfo("2 - create agent");
-            printInfo("3 - print building schema");
-            printInfo("4 - run simulation");
+            printInfo("3 - remove agents");
+            printInfo("4 - print building schema");
+            printInfo("5 - run simulation");
         }
         printInfo("0 - exit");
         printInfo("");
@@ -67,12 +68,19 @@ public class SimulationRunner {
 
             case 3: {
                 if(building != null) {
-                    printElevatorSystem();
+                    printAgentRemoveDialog();
                 }
                 break;
             }
 
             case 4: {
+                if(building != null) {
+                    printElevatorSystem();
+                }
+                break;
+            }
+
+            case 5: {
                 if(building != null) {
                     printSimulationMenu();
                 }
@@ -130,12 +138,9 @@ public class SimulationRunner {
                 Thread.sleep(delay);
                 printElevatorSystem();
             }
-
-            printInfo("");
-            printInfo("Agent created!");
-            printInfo("");
         } catch (Exception e) {
             printInfo("");
+            e.printStackTrace();
             printInfo("Wrong input!");
             printInfo("");
             selection = -1;
@@ -161,6 +166,11 @@ public class SimulationRunner {
         System.out.println("\n");
     }
 
+    private void printAgentRemoveDialog() {
+        building.removeAllAgents();
+        System.out.println("\nAll agents removed!\n");
+    }
+
     public void printElevatorShaft(Elevator elevator) {
         for(Floor floor: building.getFloors()) {
             if(elevator.getFloor() == floor)
@@ -172,6 +182,7 @@ public class SimulationRunner {
             System.out.print(" " + entry.getLevel() + ", " + elevator.getFloorQueue().getDirection(entry) + "; ");
         System.out.println();
     }
+
 
     public void printElevator(Elevator elevator) {
         System.out.printf("[%2s]", elevator.getAgentCount());

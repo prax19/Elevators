@@ -1,6 +1,7 @@
 package entities.building;
 
 import entities.Agent;
+import entities.building.elevator.Elevator;
 import entities.building.elevator.ElevatorSystem;
 import simulation.SimulationEntity;
 
@@ -35,6 +36,13 @@ public class Building implements SimulationEntity {
                 startingFloor,
                 targetFloor
         ));
+    }
+
+    public void removeAllAgents() {
+        for(Agent agent: agents) {
+            agent.remove();
+        }
+        agents.clear();
     }
 
     public List<Floor> getFloors() {
