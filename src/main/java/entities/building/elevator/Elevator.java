@@ -69,15 +69,37 @@ public class Elevator implements SimulationEntity, AgentLocation {
             if(closed) {
                 closed = false;
             } else {
+                List<Agent> leavingAgents = new ArrayList<>();
+                for(Agent agent : agents) {
+                    if(agent.getTargetFloor() == floor)
+                        leavingAgents.add(agent);
+                }
+
+                List<Agent> enteringAgents = new ArrayList<>();
+                for(Agent agent : floor.getAgents()) {
+                    if(direction == agent.getDirection())
+                        enteringAgents.add(agent);
+                }
+
+                for(Agent agent : leavingAgents) {
+                    agent.enter(floor);
+                }
+
+                for(Agent agent : enteringAgents) {
+                    agent.enter(this);
+                }
+
                 removeFromQueue(floor);
                 closed = true;
             }
         }
         else if(!floorQueue.getFloors().isEmpty()) {
+            Floor bottomQueueFloor = Floor.getBottomFloor(floorQueue.getFloors());
+            Floor topQueueFloor = Floor.getTopFloor(floorQueue.getFloors());
             if(previousQueueSize == 0) {
                 List<Floor> edgeFloors = new ArrayList<>();
-                edgeFloors.add(Floor.getBottomFloor(floorQueue.getFloors()));
-                edgeFloors.add(Floor.getTopFloor(floorQueue.getFloors()));
+                edgeFloors.add(bottomQueueFloor);
+                edgeFloors.add(topQueueFloor);
                 if(edgeFloors.get(0) == edgeFloors.get(1)) {
                     direction = Floor.determineDirection(floors, floor, edgeFloors.get(0));
                 } else {
@@ -93,6 +115,10 @@ public class Elevator implements SimulationEntity, AgentLocation {
 
     public Floor getFloor() {
         return floor;
+    }
+
+    public int getAgentCount() {
+        return agents.size();
     }
 
     public Direction getDirection() {

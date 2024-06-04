@@ -124,4 +124,8 @@ public class Floor implements SimulationEntity, AgentLocation {
         return nearestFloor;
     }
 
+    public static boolean isGreaterOrEquals(Floor floor1, Floor floor2) {
+        return floor1.getLevel() >= floor2.getLevel();
+    }
+
 }

@@ -2,10 +2,12 @@ package entities;
 
 import entities.building.Building;
 import entities.building.Floor;
+import entities.building.elevator.Elevator;
 import simulation.SimulationEntity;
 import utilities.AgentLocation;
 import utilities.Direction;
 
+import javax.xml.stream.Location;
 import java.util.List;
 
 public class Agent implements SimulationEntity {
@@ -25,16 +27,40 @@ public class Agent implements SimulationEntity {
         currentLocation.onEnter(this);
     }
 
+    public Floor getTargetFloor() {
+        return targetFloor;
+    }
+
+    public AgentLocation getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public Direction getDirection() {
+        if(!currentLocation.equals(targetFloor)) {
+            if(currentLocation instanceof Floor)
+                return Floor.determineDirection(
+                        context.getFloors(),
+                        (Floor) currentLocation,
+                        targetFloor
+                );
+            else
+                return ((Elevator) currentLocation).getDirection();
+        }
+        return null;
+    }
+
+    public void enter(AgentLocation location) {
+        currentLocation.onExit(this);
+        location.onEnter(this);
+        currentLocation = location;
+
+    }
+
     @Override
     public void update() {
         if(currentLocation instanceof Floor && !currentLocation.equals(targetFloor)) {
-            Direction direction =  Floor.determineDirection(
-                    context.getFloors(),
-                    (Floor)currentLocation,
-                    targetFloor
-            );
             if(!isElevatorCalled) {
-                context.getElevatorSystem().callElevator((Floor)currentLocation, direction);
+                context.getElevatorSystem().callElevator((Floor)currentLocation, getDirection());
                 isElevatorCalled = true;
             }
         }
