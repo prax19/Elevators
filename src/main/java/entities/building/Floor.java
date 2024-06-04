@@ -4,7 +4,9 @@ import entities.Agent;
 import simulation.SimulationEntity;
 import utilities.AgentLocation;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Floor implements SimulationEntity, AgentLocation {
 
@@ -29,4 +31,51 @@ public class Floor implements SimulationEntity, AgentLocation {
     public void update() {
 
     }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public static List<Floor> getFloorsInRange(int minLevel, int maxLevel) {
+        if(minLevel > maxLevel)
+            throw new IllegalArgumentException("Minimal level greater than maximal");
+        List<Floor> floors = new ArrayList();
+        for(int i = minLevel; i < maxLevel; i++)
+            floors.add(new Floor(i));
+        return floors;
+    }
+
+    public static Floor getTopFloor(List<Floor> floors) {
+        if(floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+        Floor topFloor = floors.getFirst();
+        for(Floor floor : floors)
+            if(topFloor.getLevel() < floor.getLevel())
+                topFloor = floor;
+        return topFloor;
+    }
+
+    public static Floor getBottomFloor(List<Floor> floors) {
+        if(floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+        Floor bottomFloor = floors.getFirst();
+        for(Floor floor : floors)
+            if(bottomFloor.getLevel() > floor.getLevel())
+                bottomFloor = floor;
+        return bottomFloor;
+    }
+
+    public static Floor getGroundFloor(List<Floor> floors) {
+        return getFloor(floors, 0);
+    }
+
+    public static Floor getFloor(List<Floor> floors, int level) {
+        if(floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+        for(Floor floor : floors)
+            if(floor.getLevel() == level)
+                return floor;
+        throw new NoSuchElementException("No such floor found");
+    }
+
 }
