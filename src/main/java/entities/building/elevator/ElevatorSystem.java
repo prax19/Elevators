@@ -38,6 +38,10 @@ public class ElevatorSystem implements SimulationEntity {
     // Allows agents to leave the elevator
     public void dropOff(Elevator elevator) {}
 
+    public List<Elevator> getElevators() {
+        return elevators;
+    }
+
     @Override
     public void update() {
         for(Elevator elevator : elevators)
