@@ -18,7 +18,7 @@ public class Elevator implements SimulationEntity, AgentLocation {
     private List<Agent> agents;
 
     private Direction direction;
-    private List<Floor> floorQueue;
+    private FloorRequestQueue floorQueue;
 
     private int previousQueueSize;
 
@@ -28,21 +28,29 @@ public class Elevator implements SimulationEntity, AgentLocation {
         this.closed = true;
         this.agents = new ArrayList<>();
         this.direction = Direction.UP;
-        this.floorQueue = new ArrayList<>();
+        this.floorQueue = new FloorRequestQueue();
         this.previousQueueSize = 0;
     }
 
     public void move() {
         floor = Floor.nextFloor(floors, floor, direction);
-        if(floor == Floor.getTopFloor(floorQueue))
+        if(floor == Floor.getTopFloor(floorQueue.getFloors()))
             direction = Direction.DOWN;
-        else if(floor == Floor.getBottomFloor(floorQueue))
+        else if(floor == Floor.getBottomFloor(floorQueue.getFloors()))
             direction = Direction.UP;
     }
 
-    public void addToQueue(Floor floor) {
-        if(!floorQueue.contains(floor))
-            floorQueue.add(floor);
+    public void addToQueue(Floor floor, Direction direction) {
+        if(!floorQueue.getFloors().contains(floor))
+            floorQueue.addFloor(floor, direction);
+    }
+
+    public void removeFromQueue(Floor floor) {
+        floorQueue.remove(floor);
+    }
+
+    public Direction getQueueEntryDirection(Floor floor) {
+        return floorQueue.getDirection(floor);
     }
 
     @Override
@@ -57,20 +65,19 @@ public class Elevator implements SimulationEntity, AgentLocation {
 
     @Override
     public void update() {
-        if(floorQueue.contains(floor)) {
+        if(floorQueue.contains(floor) && floorQueue.getDirection(floor) == direction) {
             if(closed) {
                 closed = false;
             } else {
-                //TODO: agent entrance
-                floorQueue.remove(floor);
+                removeFromQueue(floor);
                 closed = true;
             }
         }
-        else if(!floorQueue.isEmpty()) {
+        else if(!floorQueue.getFloors().isEmpty()) {
             if(previousQueueSize == 0) {
                 List<Floor> edgeFloors = new ArrayList<>();
-                edgeFloors.add(Floor.getBottomFloor(floorQueue));
-                edgeFloors.add(Floor.getTopFloor(floorQueue));
+                edgeFloors.add(Floor.getBottomFloor(floorQueue.getFloors()));
+                edgeFloors.add(Floor.getTopFloor(floorQueue.getFloors()));
                 if(edgeFloors.get(0) == edgeFloors.get(1)) {
                     direction = Floor.determineDirection(floors, floor, edgeFloors.get(0));
                 } else {

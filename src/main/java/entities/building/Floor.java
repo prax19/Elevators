@@ -38,6 +38,10 @@ public class Floor implements SimulationEntity, AgentLocation {
         return level;
     }
 
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
     public static List<Floor> getFloorsInRange(int minLevel, int maxLevel) {
         if(minLevel > maxLevel)
             throw new IllegalArgumentException("Minimal level greater than maximal");

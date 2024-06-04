@@ -31,7 +31,7 @@ public class ElevatorSystem implements SimulationEntity {
     public void callElevator(Floor floor, Direction direction) {
         Elevator elevator = elevators.get(0);
         //if(direction == elevator.getDirection() || elevator.isIdling())
-            elevator.addToQueue(floor);
+            elevator.addToQueue(floor, direction);
     }
 
     // Send specific elevator to specific floor.

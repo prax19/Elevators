@@ -39,4 +39,5 @@ public class Agent implements SimulationEntity {
             }
         }
     }
+
 }
