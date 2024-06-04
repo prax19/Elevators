@@ -2,11 +2,12 @@ package entities.building.elevator;
 
 import entities.Agent;
 import entities.building.Floor;
+import simulation.SimulationEntity;
 import utilities.Direction;
 
 import java.util.List;
 
-public class ElevatorSystem {
+public class ElevatorSystem implements SimulationEntity {
 
     private List<Elevator> elevators;
 
@@ -24,4 +25,9 @@ public class ElevatorSystem {
     // Allows agents to leave the elevator
     public void dropOff(Elevator elevator) {}
 
+    @Override
+    public void update() {
+        for(Elevator elevator : elevators)
+            elevator.update();
+    }
 }

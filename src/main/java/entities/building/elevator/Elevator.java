@@ -1,10 +1,10 @@
 package entities.building.elevator;
 
-import entities.building.Building;
 import entities.building.Floor;
+import simulation.SimulationEntity;
 import utilities.AgentLocation;
 
-public class Elevator implements AgentLocation {
+public class Elevator implements SimulationEntity, AgentLocation {
 
     private Floor floor;
     private boolean closed;
@@ -19,6 +19,11 @@ public class Elevator implements AgentLocation {
 
     @Override
     public void onExit() {
+
+    }
+
+    @Override
+    public void update() {
 
     }
 }

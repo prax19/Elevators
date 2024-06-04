@@ -1,8 +1,9 @@
 package entities.building;
 
+import simulation.SimulationEntity;
 import utilities.AgentLocation;
 
-public class Floor implements AgentLocation {
+public class Floor implements SimulationEntity, AgentLocation {
 
     private int level;
 
@@ -13,6 +14,11 @@ public class Floor implements AgentLocation {
 
     @Override
     public void onExit() {
+
+    }
+
+    @Override
+    public void update() {
 
     }
 }
