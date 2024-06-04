@@ -31,4 +31,12 @@ public class Building implements SimulationEntity {
         return floors;
     }
 
+    public ElevatorSystem getElevatorSystem() {
+        return elevatorSystem;
+    }
+
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
 }
