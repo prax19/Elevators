@@ -102,7 +102,7 @@ public class SimulationTests {
                 printEmptyFloor();
         }
         for(Floor entry: elevator.getFloorQueue().getFloors())
-        System.out.print(entry.getLevel() + ", " + elevator.getFloorQueue().getDirection(entry) + "; ");
+        System.out.print(" " + entry.getLevel() + ", " + elevator.getFloorQueue().getDirection(entry) + "; ");
         System.out.println();
     }
 

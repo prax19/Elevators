@@ -7,9 +7,6 @@ import simulation.SimulationEntity;
 import utilities.AgentLocation;
 import utilities.Direction;
 
-import javax.xml.stream.Location;
-import java.util.List;
-
 public class Agent implements SimulationEntity {
 
     private final Building context;
@@ -18,14 +15,14 @@ public class Agent implements SimulationEntity {
     private final Floor targetFloor;
 
     private boolean isElevatorCalled;
-    private boolean isFloorChoosen;
+    private boolean isFloorChosen;
 
     public Agent(Building context, AgentLocation currentLocation, Floor targetFloor) {
         this.context = context;
         this.currentLocation = currentLocation;
         this.targetFloor = targetFloor;
         this.isElevatorCalled = false;
-        this.isFloorChoosen = false;
+        this.isFloorChosen = false;
         currentLocation.onEnter(this);
     }
 
@@ -64,9 +61,9 @@ public class Agent implements SimulationEntity {
             context.getElevatorSystem().callElevator((Floor)currentLocation, getDirection());
             isElevatorCalled = true;
         }
-        if(currentLocation instanceof Elevator && !isFloorChoosen) {
+        if(currentLocation instanceof Elevator && !isFloorChosen) {
             context.getElevatorSystem().sendElevator((Elevator) currentLocation, targetFloor);
-            isFloorChoosen = true;
+            isFloorChosen = true;
         }
     }
 

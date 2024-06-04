@@ -29,6 +29,14 @@ public class Building implements SimulationEntity {
             agent.update();
     }
 
+    public void addAgent(Floor startingFloor, Floor targetFloor) {
+        agents.add(new Agent(
+                this,
+                startingFloor,
+                targetFloor
+        ));
+    }
+
     public List<Floor> getFloors() {
         return floors;
     }
