@@ -1,8 +1,10 @@
 package utilities;
 
+import entities.Agent;
+
 public interface AgentLocation {
 
-    void onEnter();
-    void onExit();
+    void onEnter(Agent agent);
+    void onExit(Agent agent);
 
 }

@@ -1,20 +1,28 @@
 package entities.building;
 
+import entities.Agent;
 import simulation.SimulationEntity;
 import utilities.AgentLocation;
 
+import java.util.List;
+
 public class Floor implements SimulationEntity, AgentLocation {
 
-    private int level;
+    private final int level;
+    private List<Agent> agents;
 
-    @Override
-    public void onEnter() {
-
+    public Floor(int level) {
+        this.level = level;
     }
 
     @Override
-    public void onExit() {
+    public void onEnter(Agent agent) {
+        agents.add(agent);
+    }
 
+    @Override
+    public void onExit(Agent agent) {
+        agents.remove(agent);
     }
 
     @Override
