@@ -8,7 +8,6 @@ import utilities.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 public class Elevator implements SimulationEntity, AgentLocation {
 
@@ -34,18 +33,12 @@ public class Elevator implements SimulationEntity, AgentLocation {
     }
 
     public void move() {
-        try {
-            floor = Floor.nextFloor(floors, floor, direction);
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
-            if(direction == Direction.UP)
-                direction = Direction.DOWN;
-            else
-                direction = Direction.UP;
-        }
-        if(floor == Floor.getTopFloor(floorQueue.getFloors()))
+        floor = Floor.nextFloor(floors, floor, direction);
+        Floor topFloor = Floor.getTopFloor(floorQueue.getFloors());
+        Floor bottomFloor = Floor.getBottomFloor(floorQueue.getFloors());
+        if(floor == topFloor && topFloor != bottomFloor)
             direction = Direction.DOWN;
-        else if(floor == Floor.getBottomFloor(floorQueue.getFloors()))
+        else if(floor == bottomFloor && bottomFloor != topFloor)
             direction = Direction.UP;
     }
 
@@ -99,12 +92,10 @@ public class Elevator implements SimulationEntity, AgentLocation {
             }
         }
         else if(!floorQueue.getFloors().isEmpty()) {
-            Floor bottomQueueFloor = Floor.getBottomFloor(floorQueue.getFloors());
-            Floor topQueueFloor = Floor.getTopFloor(floorQueue.getFloors());
             if(previousQueueSize == 0) {
                 List<Floor> edgeFloors = new ArrayList<>();
-                edgeFloors.add(bottomQueueFloor);
-                edgeFloors.add(topQueueFloor);
+                edgeFloors.add(Floor.getBottomFloor(floorQueue.getFloors()));
+                edgeFloors.add(Floor.getTopFloor(floorQueue.getFloors()));
                 if(edgeFloors.get(0) == edgeFloors.get(1)) {
                     direction = Floor.determineDirection(floors, floor, edgeFloors.get(0));
                 } else {
