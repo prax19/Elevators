@@ -91,4 +91,15 @@ public class Floor implements SimulationEntity, AgentLocation {
         throw new NoSuchElementException("No such floor found");
     }
 
+    public static Direction determineDirection(List<Floor> floors, Floor initialFloor, Floor targetFloor) {
+        if(floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+        if(initialFloor.getLevel() == targetFloor.getLevel())
+            throw new IllegalArgumentException("Both floors are the same");
+        if(initialFloor.getLevel() < targetFloor.getLevel())
+            return Direction.UP;
+        else
+            return Direction.DOWN;
+    }
+
 }
