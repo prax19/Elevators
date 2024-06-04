@@ -49,10 +49,6 @@ public class Elevator implements SimulationEntity, AgentLocation {
         floorQueue.remove(floor);
     }
 
-    public Direction getQueueEntryDirection(Floor floor) {
-        return floorQueue.getDirection(floor);
-    }
-
     @Override
     public void onEnter(Agent agent) {
         agents.add(agent);

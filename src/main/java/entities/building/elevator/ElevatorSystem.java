@@ -30,19 +30,14 @@ public class ElevatorSystem implements SimulationEntity {
     // Equivalent of calling elevator from an up/down control panel on each floor.
     public void callElevator(Floor floor, Direction direction) {
         Elevator elevator = elevators.get(0);
-        //if(direction == elevator.getDirection() || elevator.isIdling())
             elevator.addToQueue(floor, direction);
     }
 
     // Send specific elevator to specific floor.
     // Equivalent of selecting floor from an elevator control panel.
-    public void sendElevator(Elevator elevator, Floor floor) {}
-
-    // Allows agents to enter the elevator
-    public void pickUp(Elevator elevator) {}
-
-    // Allows agents to leave the elevator
-    public void dropOff(Elevator elevator) {}
+    public void sendElevator(Elevator elevator, Floor floor) {
+        elevator.addToQueue(floor, elevator.getDirection());
+    }
 
     public List<Elevator> getElevators() {
         return elevators;

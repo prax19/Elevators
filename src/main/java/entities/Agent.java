@@ -18,12 +18,14 @@ public class Agent implements SimulationEntity {
     private final Floor targetFloor;
 
     private boolean isElevatorCalled;
+    private boolean isFloorChoosen;
 
     public Agent(Building context, AgentLocation currentLocation, Floor targetFloor) {
         this.context = context;
         this.currentLocation = currentLocation;
         this.targetFloor = targetFloor;
         this.isElevatorCalled = false;
+        this.isFloorChoosen = false;
         currentLocation.onEnter(this);
     }
 
@@ -58,11 +60,13 @@ public class Agent implements SimulationEntity {
 
     @Override
     public void update() {
-        if(currentLocation instanceof Floor && !currentLocation.equals(targetFloor)) {
-            if(!isElevatorCalled) {
-                context.getElevatorSystem().callElevator((Floor)currentLocation, getDirection());
-                isElevatorCalled = true;
-            }
+        if(currentLocation instanceof Floor && !isElevatorCalled && !currentLocation.equals(targetFloor)) {
+            context.getElevatorSystem().callElevator((Floor)currentLocation, getDirection());
+            isElevatorCalled = true;
+        }
+        if(currentLocation instanceof Elevator && !isFloorChoosen) {
+            context.getElevatorSystem().sendElevator((Elevator) currentLocation, targetFloor);
+            isFloorChoosen = true;
         }
     }
 
