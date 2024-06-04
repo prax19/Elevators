@@ -20,13 +20,15 @@ public class ElevatorSystem implements SimulationEntity {
         elevators = new ArrayList();
         for(int i = 0; i < numberOfElevators; i++)
             elevators.add(
-                    new Elevator(Floor.getGroundFloor(context.getFloors()))
+                    new Elevator(context.getFloors(), Floor.getGroundFloor(context.getFloors()))
             );
     }
 
     // Calls idle or on-the-way elevator.
     // Equivalent of calling elevator from an up/down control panel on each floor.
-    public void callElevator(Floor floor, Direction direction) {}
+    public void callElevator(Floor floor, Direction direction) {
+
+    }
 
     // Send specific elevator to specific floor.
     // Equivalent of selecting floor from an elevator control panel.
