@@ -3,6 +3,7 @@ package entities.building;
 import entities.Agent;
 import simulation.SimulationEntity;
 import utilities.AgentLocation;
+import utilities.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,18 @@ public class Floor implements SimulationEntity, AgentLocation {
         for(Floor floor : floors)
             if(floor.getLevel() == level)
                 return floor;
+        throw new NoSuchElementException("No such floor found");
+    }
+
+    public static Floor nextFloor(List<Floor> floors, Floor currentFloor, Direction direction) {
+        if(floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+        for(Floor floor : floors) {
+            if(floor.getLevel() == currentFloor.getLevel() + 1 && direction == Direction.UP)
+                return floor;
+            if(floor.getLevel() == currentFloor.getLevel() - 1 && direction == Direction.DOWN)
+                return floor;
+        }
         throw new NoSuchElementException("No such floor found");
     }
 
