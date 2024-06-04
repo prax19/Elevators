@@ -1,9 +1,12 @@
+import entities.Agent;
 import entities.building.Building;
 import entities.building.Floor;
+import entities.building.elevator.Elevator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import utilities.Direction;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,10 +21,15 @@ public class SimulationTests {
 
         building = new Building(-2, 10, 2);
 
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 6), Floor.getFloor(building.getFloors(), 0)));
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 3), Floor.getFloor(building.getFloors(), 0)));
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 8), Floor.getFloor(building.getFloors(), 0)));
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 2), Floor.getFloor(building.getFloors(), 0)));
+
     }
 
     @Test
-    @DisplayName("Building setup tests")
+    @DisplayName("Building setup test")
     public void buildingSetupTest() {
 
         List<Floor> floors = building.getFloors();
@@ -37,6 +45,73 @@ public class SimulationTests {
             () -> { Floor.getFloor(floors, 10); }
         );
 
+    }
+
+    @Test
+    public void floorClassStaticFunctionsTest() {
+
+        List<Floor> floors = building.getFloors();
+
+        Floor floor0 = Floor.getFloor(floors, 0);
+        Floor floor9 = Floor.getFloor(floors, 9);
+        Floor floor5 = Floor.getFloor(floors, 5);
+        Floor floorMinus2 = Floor.getFloor(floors, -2);
+
+        Assertions.assertEquals(floor9, Floor.getFloorsSortedByDistance(floors, floorMinus2).getLast());
+        Assertions.assertEquals(floorMinus2, Floor.getFloorsSortedByDistance(floors, floor5).getLast());
+
+        Assertions.assertEquals(true, Floor.isGettingFarther(floor0, floor5, Direction.UP));
+        Assertions.assertEquals(true, Floor.isGettingFarther(floor0, floorMinus2, Direction.DOWN));
+        Assertions.assertEquals(false, Floor.isGettingFarther(floor0, floorMinus2, Direction.UP));
+
+    }
+
+    @Test
+    public void testTest() {
+        for (int i = 0; i < 100; i++) {
+            building.update();
+            printElevatorSystem();
+        }
+
+        System.out.println();
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 1), Floor.getFloor(building.getFloors(), 0)));
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 0), Floor.getFloor(building.getFloors(), 5)));
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 9), Floor.getFloor(building.getFloors(), -1)));
+        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), -2), Floor.getFloor(building.getFloors(), -1)));
+
+        for (int i = 0; i < 100; i++) {
+            building.update();
+            printElevatorSystem();
+        }
+    }
+
+    public void printElevatorSystem() {
+        for(Floor floor: building.getFloors())
+            System.out.printf(" %2s ", floor.getAgents().size());
+        System.out.println();
+        for(Elevator elevator: building.getElevatorSystem().getElevators())
+            printElevatorShaft(elevator);
+        System.out.println("\n");
+    }
+
+    public void printElevatorShaft(Elevator elevator) {
+        for(Floor floor: building.getFloors()) {
+            if(elevator.getFloor() == floor)
+                printElevator(elevator);
+            else
+                printEmptyFloor();
+        }
+        for(Floor entry: elevator.getFloorQueue().getFloors())
+        System.out.print(entry.getLevel() + ", " + elevator.getFloorQueue().getDirection(entry) + "; ");
+        System.out.println();
+    }
+
+    public void printElevator(Elevator elevator) {
+        System.out.printf("[%2s]", elevator.getAgentCount());
+    }
+
+    public void printEmptyFloor() {
+        System.out.print("----");
     }
 
 }
