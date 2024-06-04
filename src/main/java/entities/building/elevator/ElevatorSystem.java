@@ -12,11 +12,13 @@ import java.util.List;
 public class ElevatorSystem implements SimulationEntity {
 
     private final Building context;
+    private final List<Agent> agents;
 
     private final List<Elevator> elevators;
 
     public ElevatorSystem(Building context, int numberOfElevators) {
         this.context = context;
+        this.agents = context.getAgents();
         elevators = new ArrayList();
         for(int i = 0; i < numberOfElevators; i++)
             elevators.add(
@@ -27,7 +29,9 @@ public class ElevatorSystem implements SimulationEntity {
     // Calls idle or on-the-way elevator.
     // Equivalent of calling elevator from an up/down control panel on each floor.
     public void callElevator(Floor floor, Direction direction) {
-
+        Elevator elevator = elevators.get(0);
+        //if(direction == elevator.getDirection() || elevator.isIdling())
+            elevator.addToQueue(floor);
     }
 
     // Send specific elevator to specific floor.

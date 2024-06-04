@@ -20,6 +20,7 @@ public class Elevator implements SimulationEntity, AgentLocation {
     private Direction direction;
     private List<Floor> floorQueue;
 
+    private int previousQueueSize;
 
     public Elevator(List<Floor> floors, Floor floor) {
         this.floors = floors;
@@ -28,6 +29,7 @@ public class Elevator implements SimulationEntity, AgentLocation {
         this.agents = new ArrayList<>();
         this.direction = Direction.UP;
         this.floorQueue = new ArrayList<>();
+        this.previousQueueSize = 0;
     }
 
     public void move() {
@@ -36,6 +38,11 @@ public class Elevator implements SimulationEntity, AgentLocation {
             direction = Direction.DOWN;
         else if(floor == Floor.getBottomFloor(floorQueue))
             direction = Direction.UP;
+    }
+
+    public void addToQueue(Floor floor) {
+        if(!floorQueue.contains(floor))
+            floorQueue.add(floor);
     }
 
     @Override
@@ -59,8 +66,21 @@ public class Elevator implements SimulationEntity, AgentLocation {
                 closed = true;
             }
         }
-        else if(!floorQueue.isEmpty())
+        else if(!floorQueue.isEmpty()) {
+            if(previousQueueSize == 0) {
+                List<Floor> edgeFloors = new ArrayList<>();
+                edgeFloors.add(Floor.getBottomFloor(floorQueue));
+                edgeFloors.add(Floor.getTopFloor(floorQueue));
+                if(edgeFloors.get(0) == edgeFloors.get(1)) {
+                    direction = Floor.determineDirection(floors, floor, edgeFloors.get(0));
+                } else {
+                    Floor nearestFloor = Floor.getNearestFloor(edgeFloors, floor);
+                    direction = Floor.determineDirection(floors, floor, nearestFloor);
+                }
+            }
             move();
+        }
+        previousQueueSize = floorQueue.size();
 
     }
 
@@ -74,5 +94,9 @@ public class Elevator implements SimulationEntity, AgentLocation {
 
     public boolean isClosed() {
         return closed;
+    }
+
+    public boolean isIdling() {
+        return floorQueue.isEmpty();
     }
 }

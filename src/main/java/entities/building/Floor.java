@@ -16,6 +16,7 @@ public class Floor implements SimulationEntity, AgentLocation {
 
     public Floor(int level) {
         this.level = level;
+        agents = new ArrayList<>();
     }
 
     @Override
@@ -100,6 +101,23 @@ public class Floor implements SimulationEntity, AgentLocation {
             return Direction.UP;
         else
             return Direction.DOWN;
+    }
+
+    public static Floor getNearestFloor(List<Floor> floors, Floor targetFloor) {
+        if (floors.isEmpty())
+            throw new IllegalArgumentException("No floors found");
+
+        Floor nearestFloor = floors.get(0);
+        int minDistance = Math.abs(nearestFloor.getLevel() - targetFloor.getLevel());
+
+        for (Floor floor : floors) {
+            int distance = Math.abs(floor.getLevel() - targetFloor.getLevel());
+            if (distance < minDistance) {
+                nearestFloor = floor;
+                minDistance = distance;
+            }
+        }
+        return nearestFloor;
     }
 
 }
