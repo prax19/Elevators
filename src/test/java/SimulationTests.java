@@ -60,9 +60,9 @@ public class SimulationTests {
         Assertions.assertEquals(floor9, Floor.getFloorsSortedByDistance(floors, floorMinus2).getLast());
         Assertions.assertEquals(floorMinus2, Floor.getFloorsSortedByDistance(floors, floor5).getLast());
 
-        Assertions.assertEquals(true, Floor.isGettingFarther(floor0, floor5, Direction.UP));
-        Assertions.assertEquals(true, Floor.isGettingFarther(floor0, floorMinus2, Direction.DOWN));
-        Assertions.assertEquals(false, Floor.isGettingFarther(floor0, floorMinus2, Direction.UP));
+        Assertions.assertTrue(Floor.isGettingFarther(floor0, floor5, Direction.UP));
+        Assertions.assertTrue(Floor.isGettingFarther(floor0, floorMinus2, Direction.DOWN));
+        Assertions.assertFalse(Floor.isGettingFarther(floor0, floorMinus2, Direction.UP));
 
     }
 
