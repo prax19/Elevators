@@ -66,6 +66,17 @@ public class ElevatorSystem implements SimulationEntity {
         for(Elevator elevator : elevators) {
             elevator.update();
         }
-
     }
+
+    @Override
+    public boolean isIdle() {
+        boolean idle = true;
+        for(Elevator elevator: elevators)
+            if(!elevator.isIdle()) {
+                idle = false;
+                break;
+            }
+        return idle;
+    }
+
 }

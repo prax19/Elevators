@@ -1,7 +1,6 @@
 package entities.building;
 
 import entities.Agent;
-import entities.building.elevator.Elevator;
 import entities.building.elevator.ElevatorSystem;
 import simulation.SimulationEntity;
 
@@ -71,6 +70,19 @@ public class Building implements SimulationEntity {
 
     public List<Agent> getAgents() {
         return agents;
+    }
+
+    @Override
+    public boolean isIdle() {
+        boolean idle = true;
+        for(Agent agent: agents)
+            if(!agent.isIdle()) {
+                idle = false;
+                break;
+            }
+        if(!elevatorSystem.isIdle())
+            idle = false;
+        return idle;
     }
 
 }

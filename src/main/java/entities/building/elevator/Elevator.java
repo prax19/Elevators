@@ -137,7 +137,8 @@ public class Elevator implements SimulationEntity, AgentLocation {
         return closed;
     }
 
-    public boolean isIdling() {
+    @Override
+    public boolean isIdle() {
         return floorQueue.isEmpty();
     }
 }

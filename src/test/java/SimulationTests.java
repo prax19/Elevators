@@ -14,25 +14,26 @@ public class SimulationTests {
 
         Building building = new Building(-2, 10, 2);
 
+        System.out.println("\nPassenger load 1:");
         building.addAgent(6, 0);
         building.addAgent(3, 0);
         building.addAgent(8, 0);
         building.addAgent(2, 0);
 
-        for (int i = 0; i < 100; i++) {
+        while(!building.isIdle()) {
             building.update();
             printElevatorSystem(building);
         }
 
         ElevatorsAssertions.assertAllAgentsReachedTarget(building);
 
-        System.out.println();
+        System.out.println("\nPassenger load 2:");
         building.addAgent(1, 0);
         building.addAgent(0, 5);
         building.addAgent(9, -1);
         building.addAgent(-2, -1);
 
-        for (int i = 0; i < 100; i++) {
+        while(!building.isIdle()) {
             building.update();
             printElevatorSystem(building);
         }

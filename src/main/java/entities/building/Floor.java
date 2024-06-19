@@ -32,6 +32,11 @@ public class Floor implements SimulationEntity, AgentLocation, Comparable<Floor>
 
     }
 
+    @Override
+    public boolean isIdle() {
+        return true;
+    }
+
     public int getLevel() {
         return level;
     }

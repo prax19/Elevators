@@ -7,6 +7,8 @@ import simulation.SimulationEntity;
 import utilities.AgentLocation;
 import utilities.Direction;
 
+import java.util.Objects;
+
 public class Agent implements SimulationEntity {
 
     private final Building context;
@@ -78,6 +80,14 @@ public class Agent implements SimulationEntity {
             context.getElevatorSystem().sendElevator((Elevator) currentLocation, targetFloor);
             isFloorChosen = true;
         }
+    }
+
+    @Override
+    public boolean isIdle() {
+        if(Objects.equals(currentLocation, targetFloor))
+            return true;
+        else
+            return false;
     }
 
 }
