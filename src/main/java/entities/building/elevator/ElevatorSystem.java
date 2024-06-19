@@ -7,6 +7,7 @@ import simulation.SimulationEntity;
 import utilities.Direction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ElevatorSystem implements SimulationEntity {
@@ -44,8 +45,21 @@ public class ElevatorSystem implements SimulationEntity {
 
         Elevator selectedElevator = null;
         int minDistance = Integer.MAX_VALUE;
+
+        List<Elevator> selectedElevators = new ArrayList<>();
         for(Elevator elevator : elevators) {
-            if(!Floor.isGettingFarther(targetFloor, elevator.getFloor(), elevator.getDirection())) {
+            boolean isGettingCloser = !Floor.isGettingFarther(targetFloor, elevator.getFloor(), elevator.getDirection());
+            boolean isIdle = elevator.isIdle();
+            if(isGettingCloser)
+                selectedElevators.addFirst(elevator);
+            else if(isIdle)
+                selectedElevators.addLast(elevator);
+        }
+        if(selectedElevators.isEmpty())
+            selectedElevator = elevators.getFirst();
+        else {
+            for(Elevator elevator : selectedElevators) {
+
                 int distance = Math.abs(elevator.getFloor().getLevel() - targetFloor.getLevel());
                 if(distance < minDistance) {
                     minDistance = distance;
@@ -53,6 +67,7 @@ public class ElevatorSystem implements SimulationEntity {
                 }
             }
         }
+
         return selectedElevator;
 
     }

@@ -42,6 +42,35 @@ public class SimulationTests {
 
     }
 
+    @Test
+    @DisplayName("Test case 2")
+    public void testCase2() {
+        Building building = new Building(-4, 3, 2);
+
+        building.addAgent(-3, 0);
+
+        while(!building.isIdle()) {
+            building.update();
+            printElevatorSystem(building);
+        }
+
+    }
+
+    @Test
+    @DisplayName("Test case 3")
+    public void testCase3() {
+        Building building = new Building(-4, 3, 2);
+
+        building.addAgent(-2, 0);
+        building.addAgent(2, 0);
+
+        while(!building.isIdle()) {
+            building.update();
+            printElevatorSystem(building);
+        }
+
+    }
+
     private void printElevatorSystem(Building building) {
         for(Floor floor: building.getFloors())
             System.out.printf(" %2s ", floor.getAgents().size());
