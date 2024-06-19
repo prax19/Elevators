@@ -2,7 +2,6 @@ import entities.Agent;
 import entities.building.Building;
 import entities.building.Floor;
 import entities.building.elevator.Elevator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +24,8 @@ public class SimulationTests {
             printElevatorSystem(building);
         }
 
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
         System.out.println();
         building.addAgent(1, 0);
         building.addAgent(0, 5);
@@ -36,7 +37,7 @@ public class SimulationTests {
             printElevatorSystem(building);
         }
 
-
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
 
     }
 
