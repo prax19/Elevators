@@ -31,11 +31,23 @@ public class Building implements SimulationEntity {
     }
 
     public void addAgent(Floor startingFloor, Floor targetFloor) {
-        agents.add(new Agent(
+        agents.add(
+                new Agent(
+                    this,
+                    startingFloor,
+                    targetFloor
+                )
+        );
+    }
+
+    public void addAgent(int startingFloorLevel, int targetFloorLevel) {
+        agents.add(
+            new Agent(
                 this,
-                startingFloor,
-                targetFloor
-        ));
+                startingFloorLevel,
+                targetFloorLevel
+            )
+        );
     }
 
     public void removeAllAgents() {
@@ -47,6 +59,10 @@ public class Building implements SimulationEntity {
 
     public List<Floor> getFloors() {
         return floors;
+    }
+
+    public Floor getFloorByLevel(int level) {
+        return Floor.getFloor(getFloors(), level);
     }
 
     public ElevatorSystem getElevatorSystem() {

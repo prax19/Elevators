@@ -2,6 +2,7 @@ import entities.Agent;
 import entities.building.Building;
 import entities.building.Floor;
 import entities.building.elevator.Elevator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,17 +13,12 @@ public class SimulationTests {
     @DisplayName("Test case 1")
     public void testCase1() {
 
-    }
-
-    @Test
-    public void testTest() {
-
         Building building = new Building(-2, 10, 2);
 
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 6), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 3), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 8), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 2), Floor.getFloor(building.getFloors(), 0)));
+        building.addAgent(6, 0);
+        building.addAgent(3, 0);
+        building.addAgent(8, 0);
+        building.addAgent(2, 0);
 
         for (int i = 0; i < 100; i++) {
             building.update();
@@ -30,15 +26,18 @@ public class SimulationTests {
         }
 
         System.out.println();
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 1), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 0), Floor.getFloor(building.getFloors(), 5)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 9), Floor.getFloor(building.getFloors(), -1)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), -2), Floor.getFloor(building.getFloors(), -1)));
+        building.addAgent(1, 0);
+        building.addAgent(0, 5);
+        building.addAgent(9, -1);
+        building.addAgent(-2, -1);
 
         for (int i = 0; i < 100; i++) {
             building.update();
             printElevatorSystem(building);
         }
+
+
+
     }
 
     private void printElevatorSystem(Building building) {

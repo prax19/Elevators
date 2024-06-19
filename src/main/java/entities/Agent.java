@@ -26,6 +26,14 @@ public class Agent implements SimulationEntity {
         currentLocation.onEnter(this);
     }
 
+    public Agent(Building context, int currentFloorLevel, int targetFloorLevel) {
+        this(
+            context,
+            context.getFloorByLevel(currentFloorLevel),
+            context.getFloorByLevel(targetFloorLevel)
+        );
+    }
+
     public void remove() {
         currentLocation.onExit(this);
 

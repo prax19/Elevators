@@ -112,8 +112,8 @@ public class SimulationRunner {
             int startFloor = Integer.parseInt(printQuestion("Starting floor: "));
             int targetFloor = Integer.parseInt(printQuestion("Target floor: "));
 
-            Floor start = Floor.getFloor(building.getFloors(), startFloor);
-            Floor target = Floor.getFloor(building.getFloors(), targetFloor);
+            Floor start = building.getFloorByLevel(startFloor);
+            Floor target = building.getFloorByLevel(targetFloor);
             building.addAgent(start, target);
 
             printInfo("");

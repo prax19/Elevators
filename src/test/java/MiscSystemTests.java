@@ -21,10 +21,10 @@ public class MiscSystemTests {
 
         building = new Building(-2, 10, 2);
 
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 6), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 3), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 8), Floor.getFloor(building.getFloors(), 0)));
-        building.getAgents().add(new Agent(building, Floor.getFloor(building.getFloors(), 2), Floor.getFloor(building.getFloors(), 0)));
+        building.addAgent(6, 0);
+        building.addAgent(3, 0);
+        building.addAgent(8, 0);
+        building.addAgent(2, 0);
 
     }
 
