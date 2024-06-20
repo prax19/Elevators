@@ -8,7 +8,6 @@ import utilities.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Elevator implements SimulationEntity, AgentLocation {
 
@@ -86,6 +85,8 @@ public class Elevator implements SimulationEntity, AgentLocation {
 
     public void removeFromQueue(Floor floor) {
         floorQueue.remove(floor);
+        if(floorQueue.size() == 1)
+            setDirection(Floor.determineDirection(floors, this.floor, floorQueue.getFloors().get(0)));
     }
 
     public FloorRequestQueue getFloorQueue() {

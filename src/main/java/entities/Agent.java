@@ -7,6 +7,7 @@ import simulation.SimulationEntity;
 import utilities.AgentLocation;
 import utilities.Direction;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Agent implements SimulationEntity {
@@ -72,15 +73,18 @@ public class Agent implements SimulationEntity {
 
     @Override
     public void update() {
-        if(currentLocation instanceof Floor && !currentLocation.equals(targetFloor)) {
+        if(currentLocation instanceof Floor currentFloor && !currentLocation.equals(targetFloor)) {
             Direction direction = getDirection();
             if(!isElevatorCalled) {
-                context.getElevatorSystem().callElevator((Floor)currentLocation, direction);
+                context.getElevatorSystem().callElevator(currentFloor, direction);
                 isElevatorCalled = true;
             } else {
-                Elevator arrivedElevator = context.getElevatorSystem().getConsistentElevator((Floor)currentLocation, direction);
-                if(arrivedElevator != null && arrivedElevator.isOpened())
-                    enter(arrivedElevator);
+                List<Elevator> arrivedElevators = context.getElevatorSystem().getElevatorsOnFloor(currentFloor);
+                Elevator consistantElevator = context.getElevatorSystem().getConsistentElevator(currentFloor, direction);
+                if(consistantElevator != null && consistantElevator.isOpened())
+                    enter(consistantElevator);
+                if(consistantElevator == null && !arrivedElevators.isEmpty())
+                    context.getElevatorSystem().callElevator(currentFloor, direction);
             }
         }
         if(currentLocation instanceof Elevator) {
@@ -97,10 +101,7 @@ public class Agent implements SimulationEntity {
 
     @Override
     public boolean isIdle() {
-        if(Objects.equals(currentLocation, targetFloor))
-            return true;
-        else
-            return false;
+        return Objects.equals(currentLocation, targetFloor);
     }
 
 }

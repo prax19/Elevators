@@ -1,4 +1,3 @@
-import entities.Agent;
 import entities.building.Building;
 import entities.building.Floor;
 import entities.building.elevator.Elevator;
@@ -89,9 +88,12 @@ public class SimulationTests {
     private void printElevatorSystem(Building building) {
         for(Floor floor: building.getFloors())
             System.out.printf(" %2s ", floor.getAgents().size());
-        System.out.println();
+        System.out.println(" | Agent count");
         for(Elevator elevator: building.getElevatorSystem().getElevators())
             printElevatorShaft(building, elevator);
+        for(Floor floor: building.getFloors())
+            System.out.printf(" %2s ", floor.getLevel());
+        System.out.println(" | Level");
         System.out.println("\n");
     }
 
@@ -102,8 +104,9 @@ public class SimulationTests {
             else
                 printEmptyFloor();
         }
+        System.out.print(" | ");
         for(Floor entry: elevator.getFloorQueue().getFloors())
-            System.out.print(" " + entry.getLevel() + ", " + elevator.getFloorQueue().getDirection(entry) + "; ");
+            System.out.print(entry.getLevel() + ", " + elevator.getFloorQueue().getDirection(entry) + "; ");
         System.out.println();
     }
 
