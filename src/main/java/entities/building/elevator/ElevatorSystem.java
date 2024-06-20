@@ -41,6 +41,25 @@ public class ElevatorSystem implements SimulationEntity {
         elevator.addToQueue(floor, elevator.getDirection());
     }
 
+    public List<Elevator> getElevatorsOnFloor(Floor floor) {
+        List<Elevator> elevatorsOnFloor = new ArrayList();
+        for(Elevator elevator: elevators)
+            if(elevator.getFloor().equals(floor))
+                elevatorsOnFloor.add(elevator);
+        return elevatorsOnFloor;
+    }
+
+    public Elevator getConsistentElevator(Floor floor, Direction direction) {
+        List<Elevator> elevatorsOnFloor = getElevatorsOnFloor(floor);
+        Elevator consistentElevator = null;
+        for(Elevator elevator: elevatorsOnFloor)
+            if(elevator.getDirection() == direction) {
+                consistentElevator = elevator;
+                break;
+            }
+        return consistentElevator;
+    }
+
     public Elevator selectElevator(Floor targetFloor, Direction direction) {
 
         Elevator selectedElevator = null;

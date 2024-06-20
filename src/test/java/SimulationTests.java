@@ -108,7 +108,10 @@ public class SimulationTests {
     }
 
     private void printElevator(Elevator elevator) {
-        System.out.printf("[%2s]", elevator.getAgentCount());
+        if(!elevator.isOpened())
+            System.out.printf("[%2s]", elevator.getAgentCount());
+        else
+            System.out.printf("|%2s|", elevator.getAgentCount());
     }
 
     private void printEmptyFloor() {

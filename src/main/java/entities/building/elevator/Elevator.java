@@ -15,7 +15,7 @@ public class Elevator implements SimulationEntity, AgentLocation {
     private final List<Floor> floors;
 
     private Floor floor;
-    private boolean closed;
+    private boolean opened;
     private List<Agent> agents;
 
     private Direction direction;
@@ -26,7 +26,7 @@ public class Elevator implements SimulationEntity, AgentLocation {
     public Elevator(List<Floor> floors, Floor floor) {
         this.floors = floors;
         this.floor = floor;
-        this.closed = true;
+        this.opened = false;
         this.agents = new ArrayList<>();
         this.direction = Direction.UP;
         this.floorQueue = new FloorRequestQueue();
@@ -56,6 +56,8 @@ public class Elevator implements SimulationEntity, AgentLocation {
 
     @Override
     public void update() {
+        if(isOpened())
+            close();
         if(!isIdle()) {
             if (floorQueue.contains(floor)) {
                 if (floorQueue.getDirection(floor) != direction) {
@@ -65,15 +67,7 @@ public class Elevator implements SimulationEntity, AgentLocation {
                         changeDirection();
                 }
                 if (floorQueue.getDirection(floor) == direction) {
-                    List<Agent> agentsToCheck = new ArrayList<>();
-                    agentsToCheck.addAll(agents);
-                    agentsToCheck.addAll(floor.getAgents());
-                    for(Agent agent: agentsToCheck) {
-                        if (floor.equals(agent.getTargetFloor()))
-                            agent.enter(floor);
-                        if (direction == agent.getDirection())
-                            agent.enter(this);
-                    }
+                    open();
                     removeFromQueue(floor);
                 } else {
                     move();
@@ -119,12 +113,24 @@ public class Elevator implements SimulationEntity, AgentLocation {
             this.direction = direction;
     }
 
-    public boolean isClosed() {
-        return closed;
+    private void open() {
+        if(!opened) {
+            opened = true;
+        }
+    }
+
+    private void close() {
+        if(opened) {
+            opened = false;
+        }
+    }
+
+    public boolean isOpened() {
+        return opened;
     }
 
     @Override
     public boolean isIdle() {
-        return floorQueue.isEmpty();
+        return floorQueue.isEmpty() && !isOpened();
     }
 }

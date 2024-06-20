@@ -72,13 +72,26 @@ public class Agent implements SimulationEntity {
 
     @Override
     public void update() {
-        if(currentLocation instanceof Floor && !isElevatorCalled && !currentLocation.equals(targetFloor)) {
-            context.getElevatorSystem().callElevator((Floor)currentLocation, getDirection());
-            isElevatorCalled = true;
+        if(currentLocation instanceof Floor && !currentLocation.equals(targetFloor)) {
+            Direction direction = getDirection();
+            if(!isElevatorCalled) {
+                context.getElevatorSystem().callElevator((Floor)currentLocation, direction);
+                isElevatorCalled = true;
+            } else {
+                Elevator arrivedElevator = context.getElevatorSystem().getConsistentElevator((Floor)currentLocation, direction);
+                if(arrivedElevator != null && arrivedElevator.isOpened())
+                    enter(arrivedElevator);
+            }
         }
-        if(currentLocation instanceof Elevator && !isFloorChosen) {
-            context.getElevatorSystem().sendElevator((Elevator) currentLocation, targetFloor);
-            isFloorChosen = true;
+        if(currentLocation instanceof Elevator) {
+            if(!isFloorChosen) {
+                context.getElevatorSystem().sendElevator((Elevator) currentLocation, targetFloor);
+                isFloorChosen = true;
+            } else {
+                Elevator elevatorInUse = (Elevator) currentLocation;
+                if(elevatorInUse.getFloor() == targetFloor && elevatorInUse.isOpened())
+                    enter(elevatorInUse.getFloor());
+            }
         }
     }
 
