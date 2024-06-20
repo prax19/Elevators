@@ -4,6 +4,8 @@ import entities.building.elevator.Elevator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
+
 @DisplayName("Elevator simulation tests")
 public class SimulationTests {
 
@@ -53,6 +55,8 @@ public class SimulationTests {
             printElevatorSystem(building);
         }
 
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
     }
 
     @Test
@@ -68,6 +72,8 @@ public class SimulationTests {
             printElevatorSystem(building);
         }
 
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
     }
 
     @Test
@@ -81,6 +87,85 @@ public class SimulationTests {
         while(!building.isIdle()) {
             building.update();
             printElevatorSystem(building);
+        }
+
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
+    }
+
+    @Test
+    @DisplayName("Test case 5")
+    public void testCase5() {
+        Building building = new Building(-4, 5, 3);
+
+        System.out.println("\nPassenger load 1:");
+        building.addAgent(-2, -4);
+        building.addAgent(-2, 4);
+        building.addAgent(2, -4);
+        building.addAgent(2, 4);
+        building.addAgent(3, 0);
+        building.addAgent(4, 2);
+        building.addAgent(4, -1);
+
+        while(!building.isIdle()) {
+            building.update();
+            printElevatorSystem(building);
+        }
+
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
+        System.out.println("\nPassenger load 2:");
+        building.addAgent(-3, -4);
+        building.addAgent(4, 3);
+        building.addAgent(2, -4);
+        building.addAgent(2, -4);
+        building.addAgent(3, 0);
+        building.addAgent(4, 2);
+        building.addAgent(4, -1);
+
+        while(!building.isIdle()) {
+            building.update();
+            printElevatorSystem(building);
+        }
+
+        ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
+    }
+
+    @Test
+    @DisplayName("Random test")
+    public void randomTest() {
+
+        int basementFloors = 4;
+        int onGroundFloors = 4;
+        int elevatorNumber = 3;
+
+        int passengerLoadsNumber = 5;
+        int maxPassengersPerLoad = 20;
+
+        Building building = new Building(basementFloors * -1, onGroundFloors + 1, elevatorNumber);
+
+        for(int i = 0; i < passengerLoadsNumber; i++) {
+            System.out.println("\nPassenger load " + i + ": ");
+            int agentNumber = new Random().nextInt(maxPassengersPerLoad);
+            for(int j = 0; j < agentNumber; j++) {
+                int currentFloor;
+                int targetFloor;
+                do {
+                    currentFloor = new Random().nextInt(basementFloors + onGroundFloors) - basementFloors;
+                    targetFloor = new Random().nextInt(basementFloors + onGroundFloors) - basementFloors;
+                    System.out.println(currentFloor + " -> " + targetFloor);
+                } while(currentFloor == targetFloor);
+                building.addAgent(currentFloor, targetFloor);
+            }
+
+            while(!building.isIdle()) {
+                building.update();
+                printElevatorSystem(building);
+            }
+
+            ElevatorsAssertions.assertAllAgentsReachedTarget(building);
+
         }
 
     }

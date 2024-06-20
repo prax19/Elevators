@@ -59,13 +59,19 @@ public class Elevator implements SimulationEntity, AgentLocation {
             close();
         if(!isIdle()) {
             if (floorQueue.contains(floor)) {
+                boolean reachesTop = floor == floorQueue.getTopFloor() && direction == Direction.UP;
+                boolean reachesBottom = floor == floorQueue.getBottomFloor() && direction == Direction.DOWN;
                 if (floorQueue.getDirection(floor) != direction) {
-                    boolean reachesTop = floor == floorQueue.getTopFloor() && direction == Direction.UP;
-                    boolean reachesBottom = floor == floorQueue.getBottomFloor() && direction == Direction.DOWN;
-                    if ( reachesTop || reachesBottom )
-                        changeDirection();
+                    if (reachesTop)
+                        setDirection(Direction.DOWN);
+                    else if (reachesBottom)
+                        setDirection(Direction.UP);
                 }
                 if (floorQueue.getDirection(floor) == direction) {
+                    if (reachesTop)
+                        setDirection(Direction.DOWN);
+                    else if (reachesBottom)
+                        setDirection(Direction.UP);
                     open();
                     removeFromQueue(floor);
                 } else {

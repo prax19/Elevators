@@ -7,6 +7,7 @@ import simulation.SimulationEntity;
 import utilities.AgentLocation;
 import utilities.Direction;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,10 +82,20 @@ public class Agent implements SimulationEntity {
             } else {
                 List<Elevator> arrivedElevators = context.getElevatorSystem().getElevatorsOnFloor(currentFloor);
                 Elevator consistantElevator = context.getElevatorSystem().getConsistentElevator(currentFloor, direction);
+                if(consistantElevator == null && !arrivedElevators.isEmpty()) {
+                    for(Elevator elevator : arrivedElevators)
+                        if(elevator.getFloorQueue().size() <= 1) {
+                            consistantElevator = elevator;
+                            break;
+                        }
+                    context.getElevatorSystem().callElevator(currentFloor, direction);
+                }
+                if(consistantElevator != null && consistantElevator.isIdle()) {
+                    context.getElevatorSystem().callElevator(currentFloor, direction);
+                    enter(consistantElevator);
+                }
                 if(consistantElevator != null && consistantElevator.isOpened())
                     enter(consistantElevator);
-                if(consistantElevator == null && !arrivedElevators.isEmpty())
-                    context.getElevatorSystem().callElevator(currentFloor, direction);
             }
         }
         if(currentLocation instanceof Elevator) {
@@ -93,8 +104,10 @@ public class Agent implements SimulationEntity {
                 isFloorChosen = true;
             } else {
                 Elevator elevatorInUse = (Elevator) currentLocation;
-                if(elevatorInUse.getFloor() == targetFloor && elevatorInUse.isOpened())
+                if(elevatorInUse.getFloor() == targetFloor && elevatorInUse.isOpened()) {
                     enter(elevatorInUse.getFloor());
+                    targetFloor.getAgents().remove(this);
+                }
             }
         }
     }
