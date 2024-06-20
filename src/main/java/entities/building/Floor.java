@@ -102,12 +102,12 @@ public class Floor implements SimulationEntity, AgentLocation, Comparable<Floor>
     public static Direction determineDirection(List<Floor> floors, Floor initialFloor, Floor targetFloor) {
         if(floors.isEmpty())
             throw new IllegalArgumentException("No floors found");
-//        if(initialFloor.getLevel() == targetFloor.getLevel())
-//            throw new IllegalArgumentException("Both floors are the same");
         if(initialFloor.getLevel() < targetFloor.getLevel())
             return Direction.UP;
-        else
+        else if(initialFloor.getLevel() > targetFloor.getLevel())
             return Direction.DOWN;
+        else
+            return null;
     }
 
     public static Floor getNearestFloor(List<Floor> floors, Floor targetFloor) {
@@ -144,7 +144,7 @@ public class Floor implements SimulationEntity, AgentLocation, Comparable<Floor>
     public static boolean isGettingFarther(Floor floor, Floor objectFloor, Direction direction) {
         if(direction == Direction.UP && objectFloor.getLevel() > floor.getLevel())
             return true;
-        if(direction == Direction.DOWN && objectFloor.getLevel() < floor.getLevel())
+        else if(direction == Direction.DOWN && objectFloor.getLevel() < floor.getLevel())
             return true;
         else
             return false;

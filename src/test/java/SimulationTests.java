@@ -45,7 +45,7 @@ public class SimulationTests {
     @Test
     @DisplayName("Test case 2")
     public void testCase2() {
-        Building building = new Building(-4, 3, 2);
+        Building building = new Building(-4, 4, 2);
 
         building.addAgent(-3, 0);
 
@@ -63,6 +63,21 @@ public class SimulationTests {
 
         building.addAgent(-2, 0);
         building.addAgent(2, 0);
+
+        while(!building.isIdle()) {
+            building.update();
+            printElevatorSystem(building);
+        }
+
+    }
+
+    @Test
+    @DisplayName("Test case 4")
+    public void testCase4() {
+        Building building = new Building(-4, 5, 2);
+
+        building.addAgent(-2, -4);
+        building.addAgent(-2, 4);
 
         while(!building.isIdle()) {
             building.update();

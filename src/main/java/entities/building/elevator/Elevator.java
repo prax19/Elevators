@@ -8,6 +8,7 @@ import utilities.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Elevator implements SimulationEntity, AgentLocation {
 
@@ -32,25 +33,6 @@ public class Elevator implements SimulationEntity, AgentLocation {
         this.previousQueueSize = 0;
     }
 
-    public void move() {
-        floor = Floor.nextFloor(floors, floor, direction);
-        Floor topFloor = Floor.getTopFloor(floorQueue.getFloors());
-        Floor bottomFloor = Floor.getBottomFloor(floorQueue.getFloors());
-        if(floor == topFloor && topFloor != bottomFloor)
-            direction = Direction.DOWN;
-        else if(floor == bottomFloor && bottomFloor != topFloor)
-            direction = Direction.UP;
-    }
-
-    public void addToQueue(Floor floor, Direction direction) {
-        if(!floorQueue.getFloors().contains(floor))
-            floorQueue.addFloor(floor, direction);
-    }
-
-    public void removeFromQueue(Floor floor) {
-        floorQueue.remove(floor);
-    }
-
     @Override
     public void onEnter(Agent agent) {
         agents.add(agent);
@@ -61,52 +43,55 @@ public class Elevator implements SimulationEntity, AgentLocation {
         agents.remove(agent);
     }
 
+    public void move() {
+        floor = Floor.nextFloor(floors, floor, direction);
+    }
+
+    private void changeDirection() {
+        if(direction == Direction.UP)
+            direction = Direction.DOWN;
+        else
+            direction = Direction.UP;
+    }
+
     @Override
     public void update() {
-        if(floorQueue.contains(floor) && floorQueue.getDirection(floor) == direction) {
-            if(closed) {
-                closed = false;
-            } else {
-                List<Agent> leavingAgents = new ArrayList<>();
-                for(Agent agent : agents) {
-                    if(agent.getTargetFloor() == floor)
-                        leavingAgents.add(agent);
+        if(!isIdle()) {
+            if (floorQueue.contains(floor)) {
+                if (floorQueue.getDirection(floor) != direction) {
+                    boolean reachesTop = floor == floorQueue.getTopFloor() && direction == Direction.UP;
+                    boolean reachesBottom = floor == floorQueue.getBottomFloor() && direction == Direction.DOWN;
+                    if ( reachesTop || reachesBottom )
+                        changeDirection();
                 }
-
-                List<Agent> enteringAgents = new ArrayList<>();
-                for(Agent agent : floor.getAgents()) {
-                    if(direction == agent.getDirection())
-                        enteringAgents.add(agent);
-                }
-
-                for(Agent agent : leavingAgents) {
-                    agent.enter(floor);
-                }
-
-                for(Agent agent : enteringAgents) {
-                    agent.enter(this);
-                }
-
-                removeFromQueue(floor);
-                closed = true;
-            }
-        }
-        else if(!floorQueue.getFloors().isEmpty()) {
-            if(previousQueueSize == 0) {
-                List<Floor> edgeFloors = new ArrayList<>();
-                edgeFloors.add(Floor.getBottomFloor(floorQueue.getFloors()));
-                edgeFloors.add(Floor.getTopFloor(floorQueue.getFloors()));
-                if(edgeFloors.get(0) == edgeFloors.get(1)) {
-                    direction = Floor.determineDirection(floors, floor, edgeFloors.get(0));
+                if (floorQueue.getDirection(floor) == direction) {
+                    List<Agent> agentsToCheck = new ArrayList<>();
+                    agentsToCheck.addAll(agents);
+                    agentsToCheck.addAll(floor.getAgents());
+                    for(Agent agent: agentsToCheck) {
+                        if (floor.equals(agent.getTargetFloor()))
+                            agent.enter(floor);
+                        if (direction == agent.getDirection())
+                            agent.enter(this);
+                    }
+                    removeFromQueue(floor);
                 } else {
-                    Floor nearestFloor = Floor.getNearestFloor(edgeFloors, floor);
-                    direction = Floor.determineDirection(floors, floor, nearestFloor);
+                    move();
                 }
-            }
-            move();
+            } else
+                move();
         }
-        previousQueueSize = floorQueue.size();
+    }
 
+    public void addToQueue(Floor floor, Direction direction) {
+        if(!floorQueue.getFloors().contains(floor))
+            floorQueue.addFloor(floor, direction);
+        if(floorQueue.size() == 1)
+            setDirection(Floor.determineDirection(floors, this.floor, floorQueue.getFloors().get(0)));
+    }
+
+    public void removeFromQueue(Floor floor) {
+        floorQueue.remove(floor);
     }
 
     public FloorRequestQueue getFloorQueue() {
@@ -130,7 +115,8 @@ public class Elevator implements SimulationEntity, AgentLocation {
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        if(direction != null)
+            this.direction = direction;
     }
 
     public boolean isClosed() {

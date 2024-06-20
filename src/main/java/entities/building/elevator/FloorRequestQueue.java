@@ -30,6 +30,18 @@ public class FloorRequestQueue {
         return floors;
     }
 
+    public Floor getTopFloor() {
+        if(floors.isEmpty())
+            return null;
+        return Floor.getTopFloor(floors);
+    }
+
+    public Floor getBottomFloor() {
+        if(floors.isEmpty())
+            return null;
+        return Floor.getBottomFloor(floors);
+    }
+
     public Direction getDirection(Floor floor) {
         return this.direction.get(this.floors.indexOf(floor));
     }
